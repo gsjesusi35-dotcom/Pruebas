@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulario de pedido</title>
+<style>
+  :root{--c:#0a7d4f;--bg:#f4f6f5;--tx:#1b1f1d;--bd:#d5dbd8}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+  .wrap{max-width:520px;margin:0 auto;padding:16px}
+  h1{font-size:1.3rem;margin:8px 0 16px}
+  .card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+  label{display:block;font-size:.85rem;font-weight:600;margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;font-size:1rem;background:#fff}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .tab{padding:12px 6px;border:2px solid var(--bd);border-radius:10px;background:#fff;font-weight:600;font-size:.9rem;cursor:pointer}
+  .tab.on{border-color:var(--c);background:#e7f5ee;color:var(--c)}
+  .sec{display:none}.sec.on{display:block}
+  button.main{width:100%;padding:14px;border:0;border-radius:10px;background:var(--c);color:#fff;font-size:1rem;font-weight:700;margin-top:6px;cursor:pointer}
+  button.sec2{padding:11px;border:1px solid var(--c);color:var(--c);background:#fff;border-radius:8px;font-weight:600;width:100%;cursor:pointer}
+  .note{font-size:.85rem;color:#556;margin-top:6px}
+  .ok{color:var(--c);font-weight:600}
+  pre{white-space:pre-wrap;background:#f0f3f1;padding:12px;border-radius:8px;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📦 Datos de tu pedido</h1>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab on" data-m="pickup">🏪 Pick up</button>
+      <button class="tab" data-m="nacional">🚚 Envío nacional</button>
+      <button class="tab" data-m="delivery">🛵 Delivery</button>
+    </div>
+  </div>
+
+  <form id="f" class="card">
+    <label>Nombre y apellido</label>
+    <input id="nombre" required>
+    <label>Teléfono / WhatsApp</label>
+    <input id="tel" type="tel" required placeholder="0414-0000000">
+    <label>Pedido / observaciones</label>
+    <textarea id="obs" rows="2" placeholder="Ej: 2 camisas talla M"></textarea>
+
+    <!-- PICK UP -->
+    <div class="sec on" id="s-pickup">
+      <p class="note">Retiras en nuestra tienda. Al enviar te compartimos el link con la ubicación por WhatsApp.</p>
+    </div>
+
+    <!-- ENVÍO NACIONAL -->
+    <div class="sec" id="s-nacional">
+      <label>Empresa de envío</label>
+      <select id="empresa">
+        <option>Domesa</option><option>Zoom</option><option>Tealca</option>
+        <option>MRW</option><option>Liberty Express</option>
+      </select>
+      <label>Cédula / RIF de quien retira</label>
+      <input id="cedula">
+      <label>Estado</label>
+      <input id="estado">
+      <label>Ciudad</label>
+      <input id="ciudad">
+      <label>Oficina / agencia de destino</label>
+      <input id="oficina" placeholder="Ej: Oficina Centro, Valencia">
+    </div>
+
+    <!-- DELIVERY -->
+    <div class="sec" id="s-delivery">
+      <button type="button" class="sec2" id="gps">📍 Usar mi ubicación GPS</button>
+      <p class="note" id="gpsEstado">Aún no has compartido tu ubicación.</p>
+      <label>Dirección</label>
+      <textarea id="dir" rows="2"></textarea>
+      <label>Punto de referencia</label>
+      <input id="ref" placeholder="Ej: frente a la panadería X, casa blanca">
+    </div>
+
+    <button class="main" type="submit">Enviar por WhatsApp</button>
+  </form>
+
+  <div class="card" id="res" style="display:none">
+    <p class="ok" id="guardado"></p>
+    <pre id="msg"></pre>
+  </div>
+</div>
+
+<script type="module">
+/* ================== CONFIGURACIÓN ================== */
+const NEGOCIO_WHATSAPP = "584120000000";          // número del negocio, con código de país, sin +
+const LINK_TIENDA = "https://maps.app.goo.gl/TU_LINK"; // link de ubicación para Pick up
+const NOMBRE_NEGOCIO = "Mi Tienda";
+
+// Pega aquí tu config de Firebase (Consola Firebase > Configuración del proyecto > Tu app web).
+// Si lo dejas vacío, igual funciona: solo manda a WhatsApp.
+const firebaseConfig = null;
+/* firebaseConfig = {
+  apiKey:"...", authDomain:"...", projectId:"...", appId:"..."
+}; */
+/* =================================================== */
+
+let db = null, addDoc, collection, serverTimestamp;
+if (firebaseConfig) {
+  const app = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  const fs  = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  db = fs.getFirestore(app.initializeApp(firebaseConfig));
+  ({ addDoc, collection, serverTimestamp } = fs);
+}
+
+let modo = "pickup", gps = null;
+const $ = id => document.getElementById(id);
+
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+  modo = b.dataset.m;
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".sec").forEach(s => s.classList.toggle("on", s.id === "s-" + modo));
+});
+
+$("gps").onclick = () => {
+  $("gpsEstado").textContent = "Obteniendo ubicación…";
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      gps = { lat: p.coords.latitude, lng: p.coords.longitude };
+      $("gpsEstado").innerHTML = '<span class="ok">✅ Ubicación capturada</span>';
+    },
+    () => $("gpsEstado").textContent = "No se pudo obtener la ubicación. Escribe la dirección y referencia.",
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+};
+
+$("f").onsubmit = async e => {
+  e.preventDefault();
+  const d = { tipo: modo, nombre: $("nombre").value.trim(), telefono: $("tel").value.trim(), observaciones: $("obs").value.trim() };
+  let lineas = [`*NUEVO PEDIDO – ${NOMBRE_NEGOCIO}*`, `Cliente: ${d.nombre}`, `Tel: ${d.telefono}`];
+
+  if (modo === "pickup") {
+    lineas.push("Modalidad: *PICK UP / RETIRO*", `Ubicación de la tienda: ${LINK_TIENDA}`);
+  } else if (modo === "nacional") {
+    Object.assign(d, { empresa: $("empresa").value, cedula: $("cedula").value, estado: $("estado").value, ciudad: $("ciudad").value, oficina: $("oficina").value });
+    lineas.push("Modalidad: *ENVÍO NACIONAL*", `Empresa: ${d.empresa}`, `Cédula/RIF: ${d.cedula}`, `Destino: ${d.ciudad}, ${d.estado}`, `Oficina: ${d.oficina}`);
+  } else {
+    Object.assign(d, { direccion: $("dir").value, referencia: $("ref").value, gps });
+    lineas.push("Modalidad: *DELIVERY*", `Dirección: ${d.direccion}`, `Referencia: ${d.referencia}`);
+    if (gps) lineas.push(`GPS: https://www.google.com/maps?q=${gps.lat},${gps.lng}`);
+    else lineas.push("GPS: no compartido");
+  }
+  if (d.observaciones) lineas.push(`Pedido: ${d.observaciones}`);
+  const texto = lineas.join("\n");
+
+  $("msg").textContent = texto;
+  $("res").style.display = "block";
+
+  if (db) {
+    try { await addDoc(collection(db, "pedidos"), { ...d, creado: serverTimestamp() }); $("guardado").textContent = "✅ Pedido guardado"; }
+    catch { $("guardado").textContent = "⚠️ No se pudo guardar en Firebase"; }
+  }
+  window.open(`https://wa.me/${NEGOCIO_WHATSAPP}?text=${encodeURIComponent(texto)}`, "_blank");
+};
+</script>
+</body>
+</html>
