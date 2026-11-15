@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Élite Restaurant | Experiencia Gastronómica</title>
+<meta name="description" content="Descubre una experiencia gastronómica única. Platos especiales, sabores exquisitos y atención de calidad.">
+
+<style>
+:root {
+  --dark: #171512;
+  --gold: #c5a267;
+  --cream: #f6f2ea;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Georgia, serif;
+  background: var(--cream);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+header {
+  background: rgba(23,21,18,.97);
+  color: white;
+  padding: 20px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 25px;
+  color: var(--gold);
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+
+nav {
+  display: flex;
+  gap: 25px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  transition: .3s;
+}
+
+nav a:hover {
+  color: var(--gold);
+}
+
+.hero {
+  min-height: 620px;
+  background:
+  linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.65)),
+  url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1800&q=85');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 50px 20px;
+}
+
+.hero-content {
+  max-width: 750px;
+}
+
+.hero h1 {
+  font-size: clamp(40px,7vw,75px);
+  margin: 15px 0;
+}
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.subtitle {
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--dark);
+  padding: 13px 28px;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid var(--gold);
+  transition: .3s;
+}
+
+.btn:hover {
+  background: transparent;
+  color: white;
+}
+
+section {
+  padding: 85px 8%;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.section-title h2 {
+  font-size: 38px;
+  margin: 10px 0;
+}
+
+.section-title p {
+  color: #777;
+}
+
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  align-items: center;
+}
+
+.about img {
+  width: 100%;
+  height: 430px;
+  object-fit: cover;
+}
+
+.about-text h2 {
+  font-size: 38px;
+  margin: 12px 0;
+}
+
+.about-text p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.menu {
+  background: #fff;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 25px;
+}
+
+.menu-card {
+  background: var(--cream);
+  overflow: hidden;
+  transition: .3s;
+}
+
+.menu-card:hover {
+  transform: translateY(-6px);
+}
+
+.menu-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.menu-info {
+  padding: 22px;
+}
+
+.menu-info h3 {
+  margin-bottom: 8px;
+}
+
+.menu-info p {
+  color: #777;
+  font-size: 14px;
+}
+
+.price {
+  color: #9b753d;
+  font-weight: bold;
+  font-size: 19px;
+  display: block;
+  margin-top: 12px;
+}
+
+.special {
+  background: var(--dark);
+  color: white;
+}
+
+.special .section-title p {
+  color: #ccc;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 15px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: .3s;
+}
+
+.gallery-grid img:hover {
+  transform: scale(1.02);
+}
+
+.reservation {
+  background:
+  linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
+  url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=85') center/cover;
+  color: white;
+}
+
+.reservation form {
+  max-width: 700px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  background: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+textarea {
+  grid-column: span 2;
+  min-height: 110px;
+  resize: vertical;
+}
+
+form button {
+  grid-column: span 2;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 30px;
+  text-align: center;
+}
+
+.contact-card {
+  padding: 30px;
+  background: white;
+}
+
+.contact-card h3 {
+  color: #9b753d;
+  margin-bottom: 10px;
+}
+
+footer {
+  background: var(--dark);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+footer .logo {
+  margin-bottom: 15px;
+}
+
+footer p {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.whatsapp {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: #25d366;
+  color: white;
+  text-decoration: none;
+  padding: 15px 20px;
+  border-radius: 50px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  z-index: 200;
+}
+
+@media(max-width:850px) {
+  header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 13px;
+  }
+
+  .about {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-grid, .gallery-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width:550px) {
+  section {
+    padding: 60px 6%;
+  }
+
+  .menu-grid, .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation form {
+    grid-template-columns: 1fr;
+  }
+
+  textarea, form button {
+    grid-column: span 1;
+  }
+
+  .hero {
+    min-height: 520px;
+  }
+
+  .section-title h2 {
+    font-size: 30px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ÉLITE RESTAURANT</div>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#menu">Menú</a>
+    <a href="#galeria">Galería</a>
+    <a href="#reservas">Reservas</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+
+<!-- INICIO -->
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <span class="subtitle">Alta gastronomía</span>
+    <h1>El arte de disfrutar</h1>
+    <p>Sabores extraordinarios, ingredientes seleccionados y una experiencia gastronómica inolvidable.</p>
+    <a href="#menu" class="btn">DESCUBRIR MENÚ</a>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=85" alt="Ambiente elegante del restaurante">
+    <div class="about-text">
+      <span class="subtitle">Nuestra esencia</span>
+      <h2>Más que un restaurante, una experiencia.</h2>
+      <p>En Élite Restaurant creemos que cada comida debe convertirse en un momento especial.</p>
+      <p>Combinamos ingredientes de calidad, creatividad culinaria y atención personalizada para ofrecer una experiencia única a nuestros visitantes.</p>
+      <a href="#contacto" class="btn">CONÓCENOS</a>
+    </div>
+  </div>
+</section>
+
+<!-- MENÚ -->
+<section class="menu" id="menu">
+  <div class="section-title">
+    <span class="subtitle">Nuestra selección</span>
+    <h2>Menú gastronómico</h2>
+    <p>Descubre nuestras propuestas culinarias.</p>
+  </div>
+
+  <div class="menu-grid">
+
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=85" alt="Ensalada fresca">
+      <div class="menu-info">
+        <h3>Ensalada especial</h3>
+        <p>Vegetales frescos, ingredientes seleccionados y aderezo de la casa.</p>
+        <span class="price">$12.00</span>
+      </div>
+    </article>
+
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=85" alt="Carne gourmet">
+      <div class="menu-info">
+        <h3>Carne a la parrilla</h3>
+        <p>Corte seleccionado acompañado de guarnición especial.</p>
+        <span class="price">$25.00</span>
+      </div>
+    </article>
+
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=800&q=85" alt="Plato de pasta">
+      <div class="menu-info">
+        <h3>Pasta de la casa</h3>
+        <p>Pasta artesanal con salsa especial y parmesano.</p>
+        <span class="price">$16.00</span>
+      </div>
+    </article>
+
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=85" alt="Hamburguesa">
+      <div class="menu-info">
+        <h3>Hamburguesa premium</h3>
+        <p>Carne seleccionada, queso, vegetales y salsa especial.</p>
+        <span class="price">$14.00</span>
+      </div>
+    </article>
+
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=85" alt="Postre">
+      <div class="menu-info">
+        <h3>Postre especial</h3>
+        <p>Una creación dulce para terminar tu experiencia.</p>
+        <span class="price">$8.00</span>
+      </div>
+    </article>
+
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1513558161293-cdaf765edfd4?auto=format&fit=crop&w=800&q=85" alt="Bebida">
+      <div class="menu-info">
+        <h3>Bebida refrescante</h3>
+        <p>Preparación de frutas naturales y sabores especiales.</p>
+        <span class="price">$5.00</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ESPECIALIDADES -->
+<section class="special">
+  <div class="section-title">
+    <span class="subtitle">Selección del chef</span>
+    <h2>Especialidades de la casa</h2>
+    <p>Creaciones pensadas para sorprender tu paladar.</p>
+  </div>
+  <div class="menu-grid">
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=85" alt="Plato de carne">
+      <div class="menu-info">
+        <h3>Selección del chef</h3>
+        <p>Una propuesta especial de nuestra cocina.</p>
+      </div>
+    </article>
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=800&q=85" alt="Plato de mariscos">
+      <div class="menu-info">
+        <h3>Delicias del mar</h3>
+        <p>Ingredientes frescos y una presentación exclusiva.</p>
+      </div>
+    </article>
+    <article class="menu-card">
+      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=85" alt="Pizza especial">
+      <div class="menu-info">
+        <h3>Especialidad gourmet</h3>
+        <p>Una combinación de sabores inolvidable.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section id="galeria">
+  <div class="section-title">
+    <span class="subtitle">Nuestros espacios</span>
+    <h2>Galería</h2>
+    <p>Conoce el ambiente y nuestras creaciones.</p>
+  </div>
+  <div class="gallery-grid">
+    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=85" alt="Interior del restaurante">
+    <img src="https://images.unsplash.com/photo-1515003197210-e0cd7184f8b5?auto=format&fit=crop&w=800&q=85" alt="Presentación gastronómica">
+    <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=800&q=85" alt="Mesas del restaurante">
+    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=85" alt="Experiencia gastronómica">
+    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=85" alt="Salón del restaurante">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=85" alt="Cena elegante">
+  </div>
+</section>
+
+<!-- RESERVACIONES -->
+<section class="reservation" id="reservas">
+  <div class="section-title">
+    <span class="subtitle">Te esperamos</span>
+    <h2>Reserva tu mesa</h2>
+    <p style="color:white">Planifica tu próxima experiencia gastronómica.</p>
+  </div>
+
+  <form id="reservationForm">
+    <input type="text" id="nombre" placeholder="Nombre completo" required>
+    <input type="tel" id="telefono" placeholder="Teléfono" required>
+    <input type="date" id="fecha" required>
+    <input type="time" id="hora" required>
+    <select id="personas" required>
+      <option value="">Número de personas</option>
+      <option>1 persona</option>
+      <option>2 personas</option>
+      <option>3 personas</option>
+      <option>4 personas</option>
+      <option>5 personas</option>
+      <option>6 o más personas</option>
+    </select>
+    <textarea id="mensaje" placeholder="Comentarios adicionales"></textarea>
+    <button type="submit" class="btn">SOLICITAR RESERVACIÓN</button>
+  </form>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="section-title">
+    <span class="subtitle">Estamos para atenderte</span>
+    <h2>Contacto</h2>
+    <p>Será un placer recibirte.</p>
+  </div>
+
+  <div class="contact-grid">
+    <div class="contact-card">
+      <h3>Ubicación</h3>
+      <p>Agrega aquí la dirección del restaurante.</p>
+    </div>
+    <div class="contact-card">
+      <h3>Horario</h3>
+      <p>Lunes a domingo</p>
+      <p>12:00 PM - 10:00 PM</p>
+    </div>
+    <div class="contact-card">
+      <h3>Contáctanos</h3>
+      <p>Teléfono: +00 000 000 0000</p>
+      <p>Correo: contacto@restaurante.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">ÉLITE RESTAURANT</div>
+  <p>Gastronomía, calidad y experiencias inolvidables.</p>
+  <p>Instagram | Facebook | WhatsApp</p>
+  <p>© 2026 Élite Restaurant. Todos los derechos reservados.</p>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/000000000000" target="_blank" rel="noopener">
+  WhatsApp
+</a>
+
+<script>
+document.getElementById("reservationForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  // Sustituye por el número real del restaurante.
+  const numero = "000000000000";
+
+  const nombre = document.getElementById("nombre").value;
+  const telefono = document.getElementById("telefono").value;
+  const fecha = document.getElementById("fecha").value;
+  const hora = document.getElementById("hora").value;
+  const personas = document.getElementById("personas").value;
+  const mensaje = document.getElementById("mensaje").value;
+
+  const texto = `Hola, deseo solicitar una reservación:
+
+Nombre: ${nombre}
+Teléfono: ${telefono}
+Fecha: ${fecha}
+Hora: ${hora}
+Personas: ${personas}
+Comentarios: ${mensaje}`;
+
+  window.open(
+    `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`,
+    "_blank"
+  );
+});
+</script>
+
+</body>
+</html>
